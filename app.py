@@ -20,9 +20,9 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 
 # Database Configuration
 DB_USER = "root"
-DB_PASSWORD = "SamWeslie@14"
+DB_PASSWORD = "your_database_password"
 DB_HOST = "localhost"
-DB_NAME = "bus_pass_db"
+DB_NAME = "your_database_name"
 
 # Database Connection
 def get_db_connection():
