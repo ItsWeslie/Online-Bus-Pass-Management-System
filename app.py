@@ -313,15 +313,16 @@ def create_route():
     start_location = request.form["start_location"]
     end_location = request.form["end_location"]
     stops = request.form["stops"]
+    fees = request.form["fees"]
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
     # Insert data into the database
     cursor.execute("""
-        INSERT INTO bus_routes (route_name, start_location, end_location, stops, created_at)
-        VALUES (%s, %s, %s, %s, NOW())
-    """, (route_name, start_location, end_location, stops))
+        INSERT INTO bus_routes (route_name, start_location, end_location, stops, created_at,fees)
+        VALUES (%s, %s, %s, %s,NOW(), %s)
+    """, (route_name, start_location, end_location, stops,fees))
 
     connection.commit()
     cursor.close()
