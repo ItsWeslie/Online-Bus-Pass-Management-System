@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Pass Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="flex flex-col justify-center items-center min-h-screen bg-yellow-50">
+
+    <!-- Bus Pass Card -->
+    <div id="busPassCard" class="relative w-80 h-[500px] bg-gradient-to-b from-blue-500 to-blue-300 text-white rounded-lg shadow-lg overflow-hidden text-center">
+        <!-- Logo -->
+        <div class="py-4">
+            <h2 class="text-xl font-bold">Bus Pass</h2>
+        </div>
+
+        <!-- Profile Image -->
+        <div class="relative mx-auto mt-2 w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-md">
+            <img src="/static/img/bus-logo.jpg" alt="User Image" class="w-full h-full object-cover">
+        </div>
+
+        <!-- User Details -->
+        <div class="mt-4 px-4">
+            <h2 class="text-2xl font-bold">{{ user_pass.full_name }}</h2>
+            <p class="text-lg opacity-90">{{ user_pass.pass_id }}</p>
+            <p class="text-sm opacity-80">{{ user_pass.email }}</p>
+            <p class="text-sm opacity-80">{{ user_pass.phone }}</p>
+        </div>
+
+        <!-- QR Code -->
+        <div class="mt-4">
+            <img src="{{ url_for('generate_qr') }}" alt="QR Code" class="mx-auto w-24 h-24">
+        </div>
+
+        <!-- Footer -->
+        <div class="absolute bottom-0 w-full bg-white text-gray-800 py-2 text-sm font-medium">
+            Valid Until: <span class="font-bold">DEC 2025</span>
+        </div>
+    </div>
+
+    <!-- Download Button -->
+    <button onclick="downloadPDF()" class="mt-6 px-6 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-blue-700">
+        Download Bus Pass
+    </button>
+
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            html2canvas(document.getElementById("busPassCard")).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF({
+                    orientation: "portrait",
+                    unit: "mm",
+                    format: [80, 120] // Adjusted to bus pass size
+                });
+
+                pdf.addImage(imgData, "PNG", 0, 0, 80, 120);
+                pdf.save("Bus_Pass.pdf");
+            });
+        }
+    </script>
+
+</body>
+</html>

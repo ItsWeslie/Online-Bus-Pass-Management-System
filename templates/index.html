@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Bus Pass Portal{% endblock %}
+
+{% block content %}
+<div class="flex flex-col min-h-screen">
+    <!-- Main Content -->
+    <div class="flex justify-center items-center flex-grow p-10">
+        <div class="text-center p-12 rounded-xl shadow-2xl w-full max-w-2xl min-h-[300px] flex flex-col justify-center" data-aos="fade-up">
+            <h1 class="text-4xl font-extrabold drop-shadow-lg">Welcome to Bus Pass Management</h1>
+            <p class="mt-4 text-lg text-gray-700">
+                Apply for your bus pass online with ease and convenience.
+            </p>
+            <a href="/apply-pass" 
+               class="mt-6 inline-block bg-yellow-500 text-white px-4 py-2 text-base rounded-full shadow-md hover:bg-yellow-600 hover:scale-105 transition-all duration-300 ease-in-out"
+               data-aos="zoom-in">
+                Get Started
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-yellow-600 text-white py-4 rounded-lg">
+        <div class="container mx-auto flex justify-center items-center space-x-8">
+            <a href="/apply-pass" class="text-base">Apply</a>
+            <a href="/status" class="text-base">Status</a>
+        </div>
+        <p class="text-center text-xs mt-2">&copy; 2025 Bus Pass Portal. All rights reserved.</p>
+    </footer>
+</div>
+{% endblock %}

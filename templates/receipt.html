@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-yellow-50 flex justify-center items-center min-h-screen">
+
+    <div id="receiptContainer" class="bg-white p-6 rounded-lg shadow-lg max-w-lg">
+        <h2 class="text-2xl font-bold mb-4 text-center">Bus Pass Payment Receipt</h2>
+
+        <table class="w-full border-collapse border border-gray-300 text-left">
+            <tr>
+                <th class="border border-gray-300 p-2">Field</th>
+                <th class="border border-gray-300 p-2">Details</th>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Name:</strong></td>
+                <td class="border border-gray-300 p-2">{{ payment_detail.name }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Email:</strong></td>
+                <td class="border border-gray-300 p-2">{{ payment_detail.email }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Phone:</strong></td>
+                <td class="border border-gray-300 p-2">{{ payment_detail.phone }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Pass ID:</strong></td>
+                <td class="border border-gray-300 p-2">{{ payment_detail.pass_id }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Amount Paid:</strong></td>
+                <td class="border border-gray-300 p-2">${{ payment_detail.amount }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Transaction ID:</strong></td>
+                <td class="border border-gray-300 p-2">{{ payment_detail.id }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Date:</strong></td>
+                <td class="border border-gray-300 p-2">{{ payment_detail.created_at }}</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 p-2"><strong>Status:</strong></td>
+                <td class="border border-gray-300 p-2 text-green-600">{{ payment_detail.payment_status }}</td>
+            </tr>
+        </table>
+
+        <button id="downloadPDF" class="mt-4 w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
+            Download PDF
+        </button>
+    </div>
+
+    <script>
+        document.getElementById("downloadPDF").addEventListener("click", function () {
+            let receiptElement = document.getElementById("receiptContainer");
+
+            html2pdf(receiptElement, {
+                margin: 10,
+                filename: "Bus_Pass_Receipt.pdf",
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+            });
+        });
+    </script>
+
+</body>
+</html>

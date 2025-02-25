@@ -1,0 +1,129 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Pass Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body class="bg-yellow-50 p-6 font-sans">
+    <div class="flex justify-center items-center min-h-screen">
+        <section id="receipt" class="w-full max-w-lg bg-yellow-100 p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-center">Bus Pass Payment</h2>
+
+            <p class="text-center text-lg">Hello, <strong>{{ user_pass.full_name }}</strong></p>
+            <p class="text-center text-md mb-4">Your bus pass status is <strong class="text-green-600">Approved</strong>. Please proceed with the payment.</p>
+
+            <p class="text-lg font-semibold mb-2">Payment Details</p>
+            <p><strong>Amount:</strong> ${{ user_pass.fees }}</p> 
+            <p><strong>Pass ID:</strong> {{ user_pass.pass_id }}</p>
+
+            <form id="paymentForm" method="POST" action="{{ url_for('payment') }}">
+                <button type="submit" class="w-full bg-yellow-500 text-white p-3 rounded-lg mt-4 hover:bg-yellow-600">
+                    Pay Now
+                </button>
+            </form>
+
+            <!-- Download Receipt Button (Hidden Initially) -->
+            <button id="downloadReceipt" class="w-full bg-green-500 text-white p-3 rounded-lg mt-4 hover:bg-green-600 hidden">
+                Download Receipt
+            </button>
+
+            <!-- Generate Bus Pass Button (Hidden Initially) -->
+            <button id="generatePass" class="w-full bg-blue-500 text-white p-3 rounded-lg mt-4 hover:bg-blue-600 hidden">
+                Generate Bus Pass
+            </button>
+        </section>
+    </div>
+
+    <script> 
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check if payment was completed earlier
+            if (localStorage.getItem("paymentCompleted") === "true") {
+                document.getElementById("downloadReceipt").classList.remove("hidden");
+                document.getElementById("generatePass").classList.remove("hidden");
+            }
+        });
+        
+        document.getElementById("paymentForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+        
+            fetch("{{ url_for('payment') }}", {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                credentials: "same-origin"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    Swal.fire({
+                        title: "Payment Successful!",
+                        text: data.message,
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(() => {
+                        document.getElementById("downloadReceipt").classList.remove("hidden"); 
+                        document.getElementById("generatePass").classList.remove("hidden"); 
+        
+                        // Save payment status in localStorage
+                        localStorage.setItem("paymentCompleted", "true");
+                    });
+                } 
+                else if (data.status === "completed") {  
+                    // Payment already completed
+                    Swal.fire({
+                        title: "Payment Already Completed!",
+                        text: "Your payment has already been processed.",
+                        icon: "info",
+                        confirmButtonText: "View Bus Pass"
+                    }).then(() => {
+                        window.location.href = "{{ url_for('bus_pass_card') }}";  
+                    });
+        
+                    // Ensure the receipt button is visible
+                    document.getElementById("downloadReceipt").classList.remove("hidden");
+                    document.getElementById("generatePass").classList.remove("hidden");
+                    localStorage.setItem("paymentCompleted", "true");
+                }  
+                else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: data.message,
+                        icon: "error",
+                        confirmButtonText: "Try Again"
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: "Error!",
+                    text: "An unexpected error occurred.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            });
+        });
+        
+        
+        document.getElementById("downloadReceipt").addEventListener("click", function() {
+            window.location.href = "{{ url_for('receipt') }}";
+        });
+
+        // Redirect to bus_pass_card.html with user details
+        document.getElementById("generatePass").addEventListener("click", function() {
+            window.location.href = "{{ url_for('bus_pass_card') }}";
+        });
+
+        </script>
+        
+    
+</body>
+
+</html>

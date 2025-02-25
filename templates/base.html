@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bus Pass Portal{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body class="bg-yellow-50">
+    <nav class="bg-yellow-600 p-4 text-white flex justify-between">
+        <a href="/" class="text-xl font-bold">Bus Pass Portal</a>
+        <div>
+            <a href="/apply-pass" class="px-3">Apply</a>
+            <a href="/status" class="px-3">Check Status</a>
+
+            {% if session.user_id %}
+                <a href="/logout" class="px-3 text-red-600">Logout</a>
+            {% else %}
+                <a href="/login" class="px-3">Login</a>
+                <a href="/register" class="px-3">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>

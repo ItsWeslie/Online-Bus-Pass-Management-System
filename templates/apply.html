@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Bus Pass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+{% block content %}
+<body class="bg-yellow-50">
+    <div class="flex justify-center items-center min-h-screen">
+        <section class="w-full max-w-2xl bg-yellow-100 p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-center">Apply for a Student Bus Pass</h2>
+            
+            <!-- Message Box -->
+            <div id="message-box" class="hidden p-3 mb-4 text-white text-center rounded-lg"></div>
+            
+            <!-- Application Form -->
+            <form id="applyForm" action="/apply-pass" method="POST">
+                <!-- CSRF Token -->
+                
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="full_name" placeholder="Full Name" class="p-3 border rounded w-full" required>
+                    <input type="number" name="age" placeholder="Age" min="1" max="100" class="p-3 border rounded w-full" required>
+                    
+                    <select name="gender" class="p-3 border rounded w-full" required>
+                        <option value="" disabled selected>Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    
+                    <input type="tel" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" class="p-3 border rounded w-full" required>
+                    <input type="email" name="email" placeholder="Email" class="p-3 border rounded w-full" required>
+                    <select name="bus_route" id="bus_route" class="p-3 border rounded w-full" required>
+                        <option value="" disabled selected>Select Bus Route</option>
+                        {% for route in bus_routes %}
+                            <option value="{{ route.route_name }}" data-fees="{{ route.fees }}">{{ route.route_name }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <!-- Fees Display Field -->
+                    <input type="text" id="fees_display" placeholder="Fees" class="p-3 border rounded w-full bg-gray-200" readonly>
+
+
+                    <input type="text" name="father_name" placeholder="Father's Name" class="p-3 border rounded w-full" required>
+                    <input type="tel" name="parent_phone" placeholder="Parent's Phone" pattern="[0-9]{10}" class="p-3 border rounded w-full" required>
+                    <input type="text" name="address" placeholder="Address" class="p-3 border rounded w-full" required>
+                    
+                    <select name="blood_group" class="p-3 border rounded w-full" required>
+                        <option value="" disabled selected>Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full mt-4 bg-yellow-500 text-white p-3 rounded-lg hover:bg-yellow-600">
+                    Submit
+                </button>
+            </form>
+        </section>
+    </div>
+    
+    <script>
+        document.getElementById("applyForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+            
+            fetch("/apply-pass", {
+                method: "POST",
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin',  // This is important for sending cookies/session
+                body: formData
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    // Redirect to login if unauthorized
+                    window.location.href = '/login';
+                    throw new Error('Unauthorized');
+                }
+                return response.json();
+            })
+            .then(data => {
+                let msgBox = document.getElementById("message-box");
+                msgBox.classList.remove("hidden");
+                msgBox.textContent = data.message;
+                msgBox.classList.add(data.status === "success" ? "bg-green-500" : "bg-red-500");
+                
+                if (data.status === "success" && data.pass_id) {
+                    msgBox.textContent += ` Your Pass ID is: ${data.pass_id}`;
+                }
+            })
+            .catch(error => {
+                if (error.message !== 'Unauthorized') {
+                    console.error("Error:", error);
+                    let msgBox = document.getElementById("message-box");
+                    msgBox.classList.remove("hidden");
+                    msgBox.textContent = "An error occurred. Please try again later.";
+                    msgBox.classList.add("bg-red-500");
+                }
+            });
+        });
+
+         document.getElementById("bus_route").addEventListener("change", function() {
+        let selectedOption = this.options[this.selectedIndex]; // Get selected option
+        let fees = selectedOption.getAttribute("data-fees"); // Get fees from data attribute
+
+        document.getElementById("fees_display").value = fees ? `$${fees}` : ""; // Display fees
+    });
+    </script>
+</body>
+{% endblock %}
+</html>

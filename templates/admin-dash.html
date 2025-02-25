@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 font-sans">
+
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <aside class="w-64 bg-yellow-50 shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-700 mb-6">Admin Dashboard</h2>
+            <nav>
+                <ul>
+                    <li class="mb-4">
+                        <a href="#" class="text-gray-700 hover:text-yellow-500 flex items-center">
+                            <span class="mr-3">📜</span> Pending Applications
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="text-gray-700 hover:text-yellow-500 flex items-center">
+                            <span class="mr-3">🚌</span> Manage Bus Routes
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="#" class="text-gray-700 hover:text-yellow-500 flex items-center">
+                            <span class="mr-3">📊</span> Generate Reports
+                        </a>
+                    </li>
+                    <li class="mt-8 border-t pt-4">
+                        <a href="{{ url_for('logout') }}" class="text-red-600 hover:text-red-800 flex items-center">
+                            <span class="mr-3">🚪</span> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Pending Applications -->
+            <div class="bg-yellow-100 shadow-md rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold mb-4">Pending Applications</h3>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-yellow-500">
+                            <th class="p-3 text-left">ID</th>
+                            <th class="p-3 text-left">Name</th>
+                            <th class="p-3 text-left">Email</th>
+                            <th class="p-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="border-t">
+                            <td class="p-3">{{ app.id }}</td>
+                            <td class="p-3">{{ app.full_name }}</td>
+                            <td class="p-3">{{ app.email }}</td>
+                            <td class="p-3 flex gap-2">
+                                <a href="{{ url_for('approve_pass', id=app.id) }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">Approve</a>
+                                <a href="{{ url_for('reject_pass', id=app.id) }}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm">Reject</a>
+                                <a href="{{ url_for('delete_pass', id=app.id) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Create Bus Route -->
+            <div class="bg-yellow-100 shadow-md rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold mb-4">Create Bus Route</h3>
+                <form action="{{ url_for('create_route') }}" method="POST" class="space-y-4">
+                    <div>
+                        <label for="route_name" class="block text-sm font-medium text-gray-700">Route Name</label>
+                        <input type="text" id="route_name" name="route_name" class="border p-2 w-full rounded-md shadow-sm" required>
+                    </div>
+                    <div>
+                        <label for="start_location" class="block text-sm font-medium text-gray-700">Start Location</label>
+                        <input type="text" id="start_location" name="start_location" class="border p-2 w-full rounded-md shadow-sm" required>
+                    </div>
+                    <div>
+                        <label for="end_location" class="block text-sm font-medium text-gray-700">End Location</label>
+                        <input type="text" id="end_location" name="end_location" class="border p-2 w-full rounded-md shadow-sm" required>
+                    </div>
+                    <div>
+                        <label for="stops" class="block text-sm font-medium text-gray-700">Stops (Comma-separated)</label>
+                        <textarea id="stops" name="stops" class="border p-2 w-full rounded-md shadow-sm" rows="3" required></textarea>
+                    </div>
+                    <div>
+                        <label for="fees" class="block text-sm font-medium text-gray-700">Route Fees</label>
+                        <input type="number" id="fees" name="fees" class="border p-2 w-full rounded-md shadow-sm" required>
+                    </div>
+                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
+                        Add Route 
+                    </button>
+                </form>
+            </div>
+
+            <!-- Existing Routes -->
+            <div class="bg-yellow-100 shadow-md rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold mb-4">Existing Bus Routes</h3>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-yellow-500">
+                            <th class="p-3 text-left">ID</th>
+                            <th class="p-3 text-left">Route Name</th>
+                            <th class="p-3 text-left">Start Location</th>
+                            <th class="p-3 text-left">End Location</th>
+                            <th class="p-3 text-left">Stops</th>
+                            <th class="p-3 text-left">Fees</th>
+                            <th class="p-3 text-left">Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for route in routes %}
+                        <tr class="border-t">
+                            <td class="p-3">{{ route.id }}</td>
+                            <td class="p-3">{{ route.route_name }}</td>
+                            <td class="p-3">{{ route.start_location }}</td>
+                            <td class="p-3">{{ route.end_location }}</td>
+                            <td class="p-3">{{ route.stops }}</td>
+                            <td class="p-3">{{ route.fees }}</td>
+                            <td class="p-3">{{ route.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Generate Report -->
+            <div class="bg-yellow-100 shadow-md rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Generate Reports</h3>
+                <a href="{{ url_for('report_page') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
+                    Go to Reports Page
+                </a>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

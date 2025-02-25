@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Reports</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 p-6 font-sans">
+
+    <h2 class="text-2xl font-bold mb-4">Generate Reports</h2>
+
+    <!-- Bus Routes Report -->
+    <div class="bg-yellow-100 shadow-md rounded-lg p-6 mb-6">
+        <h3 class="text-xl font-semibold mb-4">Bus Routes Report</h3>
+        <div id="busRoutesReport">
+            <table class="w-full border-collapse border border-gray-300 bg-white">
+                <thead class="bg-yellow-500">
+                    <tr>
+                        <th class="border p-2">ID</th>
+                        <th class="border p-2">Route Name</th>
+                        <th class="border p-2">Start Location</th>
+                        <th class="border p-2">End Location</th>
+                        <th class="border p-2">Stops</th>
+                        <th class="border p-2">Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for route in bus_routes %}
+                    <tr>
+                        <td class="border p-2">{{ route.id }}</td>
+                        <td class="border p-2">{{ route.route_name }}</td>
+                        <td class="border p-2">{{ route.start_location }}</td>
+                        <td class="border p-2">{{ route.end_location }}</td>
+                        <td class="border p-2">{{ route.stops }}</td>
+                        <td class="border p-2">{{ route.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button onclick="downloadPDF('busRoutesReport', 'Bus_Routes_Report')" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
+            Download Bus Routes PDF
+        </button>
+    </div>
+
+    <!-- Bus Pass Report -->
+    <div class="bg-yellow-100 shadow-md rounded-lg p-6 mb-6">
+        <h3 class="text-xl font-semibold mb-4">Bus Pass Report</h3>
+        <div id="busPassReport">
+            <table class="w-full border-collapse border border-gray-300 bg-white">
+                <thead class="bg-yellow-500">
+                    <tr>
+                        <th class="border p-2">ID</th>
+                        <th class="border p-2">Full Name</th>
+                        <th class="border p-2">Email</th>
+                        <th class="border p-2">Status</th>
+                        <th class="border p-2">Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pass in bus_passes %}
+                    <tr>
+                        <td class="border p-2">{{ pass.id }}</td>
+                        <td class="border p-2">{{ pass.full_name }}</td>
+                        <td class="border p-2">{{ pass.email }}</td>
+                        <td class="border p-2">{{ pass.status_application }}</td>
+                        <td class="border p-2">{{ pass.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button onclick="downloadPDF('busPassReport', 'Bus_Pass_Report')" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md">
+            Download Bus Pass PDF
+        </button>
+    </div>
+
+    <script>
+        function downloadPDF(elementId, filename) {
+            const element = document.getElementById(elementId);
+            html2pdf().from(element).save(filename + ".pdf");
+        }
+    </script>
+
+</body>
+</html>
