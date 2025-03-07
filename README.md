@@ -55,7 +55,10 @@ For queries or collaborations, reach out at itssamwesliehere@gmail.com or connec
 
 Screenshots:
 
-![image](https://github.com/user-attachments/assets/91588215-baf7-4167-a09f-e4f46f71da17)
+
+![Screenshot 2025-03-02 003652](https://github.com/user-attachments/assets/04302cea-f8d0-4f22-9b3c-e7f1e7c44aaa)
+
+
 
 
 
