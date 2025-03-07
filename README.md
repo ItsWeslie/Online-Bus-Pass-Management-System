@@ -7,7 +7,9 @@ The Online Bus Pass Management Portal is an internet-based tool that simplifies 
 The system is built on:
 
 Backend: Python Flask.
+
 Frontend: HTML, TailwindCSS, JavaScript.
+
 Database: MySQL.
 
 🌟 Features:
