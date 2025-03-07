@@ -33,5 +33,6 @@ python app.py
 Access the Portal: Open http://localhost:5000 in your browser.
 
 
-📫 Contact
+📫 Contact:
+
 For queries or collaborations, reach out at itssamwesliehere@gmail.com or connect on LinkedIn - linkendin.com/in/samweslie14.
