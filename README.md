@@ -45,6 +45,7 @@ pip install -r requirements.txt
 Run the Application:
 
 python app.py
+
 Access the Portal: Open http://localhost:5000 in your browser.
 
 
