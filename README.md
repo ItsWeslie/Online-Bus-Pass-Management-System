@@ -52,3 +52,12 @@ Access the Portal: Open http://localhost:5000 in your browser.
 📫 Contact:
 
 For queries or collaborations, reach out at itssamwesliehere@gmail.com or connect on LinkedIn - linkendin.com/in/samweslie14.
+
+Screenshots:
+
+![image](https://github.com/user-attachments/assets/91588215-baf7-4167-a09f-e4f46f71da17)
+
+
+
+
+
