@@ -78,7 +78,7 @@ Screenshots:
 ![Screenshot 2025-03-02 005609](https://github.com/user-attachments/assets/7561a31a-e896-4239-a8b6-0fc4cbcefbd9)
 
 
-![Screenshot 2025-03-02 005636](https://github.com/user-attachments/assets/77f4939a-b6a9-4812-b41b-99a02ff8cc7e)
+
 
 ![Screenshot 2025-03-02 005643](https://github.com/user-attachments/assets/e0d73ff2-9057-4fe6-a6d1-b225b220b647)
 
