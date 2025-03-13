@@ -35,7 +35,7 @@ Admins:
 
 Clone the Repository:
 
-git clone https://github.com/yourusername/online-bus-pass-portal.git
+git clone https://github.com/ItsWeslie/Online-Bus-Pass-Management-System.git
 cd online-bus-pass-portal
 
 Install Dependencies:
