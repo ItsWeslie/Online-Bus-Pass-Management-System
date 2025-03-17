@@ -20,9 +20,9 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 
 # Database Configuration
 DB_USER = "root"
-DB_PASSWORD = "SamWeslie@14"
+DB_PASSWORD = "your_database_password"
 DB_HOST = "localhost"
-DB_NAME = "bus_pass_db"
+DB_NAME = "your_database_name"
 
 # Database Connection
 def get_db_connection():
@@ -315,16 +315,26 @@ def create_route():
     start_location = request.form["start_location"]
     end_location = request.form["end_location"]
     stops = request.form["stops"]
+<<<<<<< HEAD
     fees =  request.form["fees"]
+=======
+    fees = request.form["fees"]
+>>>>>>> 116759c701470f81060a158ad313de44aa739037
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
     # Insert data into the database
     cursor.execute("""
+<<<<<<< HEAD
         INSERT INTO bus_routes (route_name, start_location, end_location, stops, created_at, fees)
         VALUES (%s, %s, %s, %s, NOW(), %s)
     """, (route_name, start_location, end_location, stops, fees))
+=======
+        INSERT INTO bus_routes (route_name, start_location, end_location, stops, created_at,fees)
+        VALUES (%s, %s, %s, %s,NOW(), %s)
+    """, (route_name, start_location, end_location, stops,fees))
+>>>>>>> 116759c701470f81060a158ad313de44aa739037
 
     connection.commit()
     cursor.close()

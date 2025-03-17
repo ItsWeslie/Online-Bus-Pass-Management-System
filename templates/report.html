@@ -80,8 +80,16 @@
     <script>
         function downloadPDF(elementId, filename) {
             const element = document.getElementById(elementId);
-            html2pdf().from(element).save(filename + ".pdf");
+            
+            html2pdf(element, {
+                margin: 10,
+                filename: filename + ".pdf",
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2, scrollY: 0 },
+                jsPDF: { format: 'a4', orientation: 'landscape' }
+            });
         }
+        
     </script>
 
 </body>
