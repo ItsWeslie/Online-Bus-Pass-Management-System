@@ -38,7 +38,9 @@
                     <select name="bus_route" id="bus_route" class="p-3 border rounded w-full" required>
                         <option value="" disabled selected>Select Bus Route</option>
                         {% for route in bus_routes %}
-                            <option value="{{ route.route_name }}" data-fees="{{ route.fees }}">{{ route.route_name }}</option>
+                        <option value="{{ route.route_name }}" data-fees="{{ route.fees }}" data-stops="{{ ','.join(route.stops) }}">
+                            {{ route.route_name }}
+                        </option>
                         {% endfor %}
                     </select>
                     
@@ -61,6 +63,17 @@
                         <option value="AB+">AB+</option>
                         <option value="AB-">AB-</option>
                     </select>
+
+
+                    <!-- New Boarding Point Field -->
+                    <select name="boarding_point" id="boarding_point" class="p-3 border rounded w-full" required>
+                        <option value="" disabled selected>Select Boarding Point</option>
+                    </select>                
+
+                    <!-- New Course Title Field -->
+                    <input type="text" name="course_title" placeholder="Course Title" class="p-3 border rounded w-full" required>
+
+
                 </div>
                 
                 <button type="submit" class="w-full mt-4 bg-yellow-500 text-white p-3 rounded-lg hover:bg-yellow-600">
@@ -117,7 +130,29 @@
         let fees = selectedOption.getAttribute("data-fees"); // Get fees from data attribute
 
         document.getElementById("fees_display").value = fees ? `$${fees}` : ""; // Display fees
+
     });
+
+
+    document.getElementById("bus_route").addEventListener("change", function() {
+        let selectedOption = this.options[this.selectedIndex]; // Get selected option
+        let stops = selectedOption.getAttribute("data-stops"); // Get stops from data attribute
+    
+        // Populate Stops Dropdown
+        let stopsDropdown = document.getElementById("boarding_point");
+        stopsDropdown.innerHTML = '<option value="" disabled selected>Select Boarding Point</option>'; // Reset first
+    
+        if (stops) {
+            let stopsArray = stops.split(","); // Convert comma-separated string to array
+            stopsArray.forEach(stop => {
+                let option = document.createElement("option");
+                option.value = stop.trim();
+                option.textContent = stop.trim();
+                stopsDropdown.appendChild(option);
+            });
+        }
+    });
+
     </script>
 </body>
 {% endblock %}

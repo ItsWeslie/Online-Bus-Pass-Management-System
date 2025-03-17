@@ -75,7 +75,9 @@ def bus_pass_table():
             pass_id VARCHAR(10) UNIQUE NOT NULL,
             status_application ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',  
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            fees INT NOT NULL DEFAULT 0
+            fees INT NOT NULL DEFAULT 0,
+            boarding_point VARCHAR(255) NOT NULL,
+            course_title VARCHAR(255) NOT NULL  
         )
     """)
     
@@ -313,15 +315,16 @@ def create_route():
     start_location = request.form["start_location"]
     end_location = request.form["end_location"]
     stops = request.form["stops"]
+    fees =  request.form["fees"]
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
     # Insert data into the database
     cursor.execute("""
-        INSERT INTO bus_routes (route_name, start_location, end_location, stops, created_at)
-        VALUES (%s, %s, %s, %s, NOW())
-    """, (route_name, start_location, end_location, stops))
+        INSERT INTO bus_routes (route_name, start_location, end_location, stops, created_at, fees)
+        VALUES (%s, %s, %s, %s, NOW(), %s)
+    """, (route_name, start_location, end_location, stops, fees))
 
     connection.commit()
     cursor.close()
@@ -363,8 +366,14 @@ def apply_pass():
     if request.method == "GET":
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT route_name, fees FROM bus_routes")  # <-- Modified: Fetch bus routes
+        cursor.execute("SELECT route_name, fees, stops FROM bus_routes")  # <-- Modified: Fetch bus routes
         bus_routes = cursor.fetchall()
+        
+        for route in bus_routes:
+         route["stops"] = route["stops"].strip("[]")  # Remove brackets
+         route["stops"] = route["stops"].replace("'", "")  # Remove extra quotes if any
+         route["stops"] = route["stops"].split(",")  # Convert to list
+ 
         conn.close()
         return render_template("apply.html",bus_routes=bus_routes)
         
@@ -385,6 +394,8 @@ def apply_pass():
         parent_phone = form.get("parent_phone", "").strip()
         address = form.get("address", "").strip()
         blood_group = form.get("blood_group", "").strip()
+        boarding_point = form.get("boarding_point","").strip()
+        course_title =  form.get("course_title","").strip()
         
         
         conn = get_db_connection()
@@ -400,7 +411,7 @@ def apply_pass():
         fees = route_data["fees"]
 
         # Ensure all fields are filled
-        if not all([full_name, age, gender, phone, email, bus_route, father_name, parent_phone, address, blood_group,fees]):
+        if not all([full_name, age, gender, phone, email, bus_route, father_name, parent_phone, address, blood_group,fees,boarding_point,course_title]):
             return jsonify({"status": "error", "message": "All fields are required!"}), 400
         
         # Check if email already exists
@@ -414,9 +425,9 @@ def apply_pass():
 
         # Insert new bus pass record
         cursor.execute("""
-            INSERT INTO bus_pass (full_name, age, gender, phone, email, bus_route, father_name, parent_phone, address, blood_group, pass_id, fees)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
-        """, (full_name, age, gender, phone, email, bus_route, father_name, parent_phone, address, blood_group, pass_id, fees))
+            INSERT INTO bus_pass (full_name, age, gender, phone, email, bus_route, father_name, parent_phone, address, blood_group, pass_id, fees,boarding_point, course_title)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)
+        """, (full_name, age, gender, phone, email, bus_route, father_name, parent_phone, address, blood_group, pass_id, fees,boarding_point,course_title))
 
         conn.commit()
         conn.close()
@@ -536,12 +547,15 @@ def bus_pass_card():
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)  # ✅ Use dictionary cursor
+    
 
     # ✅ Fetch all required fields including expiry_date
     cursor.execute("""
-        SELECT full_name, email, phone, pass_id
-        FROM bus_pass
-        WHERE email = %s
+        SELECT bp.full_name, bp.email, bp.phone, bp.pass_id,bp.boarding_point, bp.course_title,
+        br.id AS id 
+        FROM bus_pass bp
+        JOIN bus_routes br ON bp.bus_route = br.route_name
+        WHERE bp.email = %s
     """, (user_pass["email"],))
     
     user_pass_data = cursor.fetchone()

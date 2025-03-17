@@ -11,7 +11,7 @@
 <body class="flex flex-col justify-center items-center min-h-screen bg-yellow-50">
 
     <!-- Bus Pass Card -->
-    <div id="busPassCard" class="relative w-80 h-[500px] bg-gradient-to-b from-blue-500 to-blue-300 text-white rounded-lg shadow-lg overflow-hidden text-center">
+    <div id="busPassCard" class="relative w-80 h-[550px] bg-gradient-to-b from-blue-500 to-blue-300 text-white rounded-lg shadow-lg overflow-hidden text-center">
         <!-- Logo -->
         <div class="py-4">
             <h2 class="text-xl font-bold">Bus Pass</h2>
@@ -22,18 +22,26 @@
             <img src="/static/img/bus-logo.jpg" alt="User Image" class="w-full h-full object-cover">
         </div>
 
+        
         <!-- User Details -->
         <div class="mt-4 px-4">
             <h2 class="text-2xl font-bold">{{ user_pass.full_name }}</h2>
-            <p class="text-lg opacity-90">{{ user_pass.pass_id }}</p>
-            <p class="text-sm opacity-80">{{ user_pass.email }}</p>
-            <p class="text-sm opacity-80">{{ user_pass.phone }}</p>
+            <p class="text-lg opacity-90">Route no: {{ user_pass.id }}</p>
+            <p  class="text-lg opacity-90">Pass id: {{ user_pass.pass_id }}</p>
+            <p class="text-sm opacity-80">Email id: {{ user_pass.email }}</p>
+            <p class="text-sm opacity-80">Phone: {{ user_pass.phone }}</p>
+            <p class="text-sm opacity-80">Boarding point: {{ user_pass.boarding_point }}</p>
+            <p class="text-sm opacity-80">Course title: {{ user_pass.course_title }}</p>
         </div>
 
         <!-- QR Code -->
-        <div class="mt-4">
-            <img src="{{ url_for('generate_qr') }}" alt="QR Code" class="mx-auto w-24 h-24">
+        
+        <div class="mt-4 flex justify-center relative z-10">
+        <img src="{{ url_for('generate_qr') }}" alt="QR Code" 
+        class="w-24 h-24 border border-gray-300 shadow-lg bg-white p-2 rounded-lg relative">
         </div>
+
+        
 
         <!-- Footer -->
         <div class="absolute bottom-0 w-full bg-white text-gray-800 py-2 text-sm font-medium">
